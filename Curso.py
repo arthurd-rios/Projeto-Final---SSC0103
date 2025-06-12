@@ -1,15 +1,17 @@
+import Disciplina
+
 class Curso:
 
-    def __init__(self, nome, unidade, duracaoideal, duracaomin, duracaomax, obrigatorias, optlivres, opteletivas):
+    def __init__(self, nome, unidade, duracaoideal, duracaomin, duracaomax):
 
         self.nome = nome
         self.unidade = unidade
         self.duracaoideal = duracaoideal
         self.duracaomin = duracaomin
         self.duracaomax = duracaomax
-        self.obrigatorias = obrigatorias
-        self.optlivres = optlivres
-        self.opteletivas = opteletivas
+        self.obrigatorias = []
+        self.optlivres = []
+        self.opteletivas = []
 
     def getNome(self):
         return self.nome
@@ -58,3 +60,21 @@ class Curso:
     
     def setCodigo(self, valor):
         self.codigo = valor  
+
+    def adicionarObrigatoria(self, valor):
+        self.obrigatorias.append(valor)
+
+    def removerObrigatoria(self, valor):
+        self.obrigatorias.remove(valor)
+
+    def adicionarOptativaEletiva(self, valor):
+        self.opteletivas.append(valor)
+
+    def removerOptativaEletiva(self, valor):
+        self.opteletivas.remove(valor)
+
+    def adicionarOptativaLivre(self, valor):
+        self.optlivres.append(valor)
+
+    def removerOptativaLivre(self, valor):
+        self.optlivres.remove(valor)
