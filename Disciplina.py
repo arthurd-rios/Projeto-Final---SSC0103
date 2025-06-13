@@ -23,7 +23,7 @@ class Disciplina:
     def setNome(self, valor):
         self.nome = valor  
 
-    def getCredAula(self):
+    def getCrediAula(self):
         return self.crediaula
     
     def setCrediAula(self, valor):

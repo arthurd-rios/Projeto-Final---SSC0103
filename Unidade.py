@@ -6,11 +6,11 @@ class Unidade:
         self.nome = nome
         self.cursos = []
 
-    def getUnidade(self):
-        return self.unidade
+    def getNome(self):
+        return self.nome
     
-    def setUnidade(self, valor):
-        self.unidade = valor
+    def setNome(self, valor):
+        self.nome = valor
 
     def getCursos(self):
         return self.cursos

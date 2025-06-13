@@ -43,23 +43,23 @@ class Curso:
     def setDuracaoMaxima(self, valor):
         self.duracaomax = valor  
 
-    def getCodigo(self):
-        return self.codigo
+    def getObrigatorias(self):
+        return self.obrigatorias
     
-    def setCodigo(self, valor):
-        self.codigo = valor  
+    def setObrigatorias(self, valor):
+        self.obrigatorias = valor  
 
-    def getCodigo(self):
-        return self.codigo
+    def getOptativasLivres(self):
+        return self.optlivres
     
-    def setCodigo(self, valor):
-        self.codigo = valor  
+    def setOptativasLivres(self, valor):
+        self.optlivres = valor  
 
-    def getCodigo(self):
-        return self.codigo
+    def getOptativasEletivas(self):
+        return self.opteletivas
     
-    def setCodigo(self, valor):
-        self.codigo = valor  
+    def setOptativasEletivas(self, valor):
+        self.opteletivas = valor  
 
     def adicionarObrigatoria(self, valor):
         self.obrigatorias.append(valor)
@@ -67,14 +67,14 @@ class Curso:
     def removerObrigatoria(self, valor):
         self.obrigatorias.remove(valor)
 
-    def adicionarOptativaEletiva(self, valor):
-        self.opteletivas.append(valor)
-
-    def removerOptativaEletiva(self, valor):
-        self.opteletivas.remove(valor)
-
     def adicionarOptativaLivre(self, valor):
         self.optlivres.append(valor)
 
     def removerOptativaLivre(self, valor):
         self.optlivres.remove(valor)
+
+    def adicionarOptativaEletiva(self, valor):
+        self.opteletivas.append(valor)
+
+    def removerOptativaEletiva(self, valor):
+        self.opteletivas.remove(valor)
