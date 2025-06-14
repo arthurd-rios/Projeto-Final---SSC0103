@@ -7,15 +7,32 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.support import expected_conditions
+from selenium.common.exceptions import TimeoutException
 from bs4 import BeautifulSoup
 from itertools import chain
 from random import randint
+from time import sleep
+from unicodedata import normalize, category
 
-def Menu(unidades, uninum):
+def padronizarTexto(texto):
+
+    if texto is None:
+        return ""
+    
+    texto = texto.strip().lower()
+
+    texto = normalize('NFD', texto)
+    texto = ''.join(c for c in texto if category(c) != 'Mn')
+
+    return texto
+
+def Menu(unidades):
 
     while True:
 
-        print("Selecione uma opção:")
+        print()
+        print()
+        print()
         print()
 
         print("1 - Cursos por unidade")
@@ -27,136 +44,166 @@ def Menu(unidades, uninum):
         print("7 - Fechar programa")
         print()
 
-        opcao = int(input())
+        try:
 
-        if opcao == 1: # Funcionalidade 1
+            opcao = int(input("Selecione uma opção: "))
+            print()
 
-            for unidade in unidades:
+            if opcao == 1: # Funcionalidade 1
 
-                unidade.imprimirCursos()
+                for unidade in unidades:
 
-        elif opcao == 2: # Funcionalidade 2
+                    unidade.imprimirCursos()
 
-            cursoencontrado = []
+            elif opcao == 2: # Funcionalidade 2
 
-            nomecurso = input("Digite o nome do curso: ")
+                cursoencontrado = []
 
-            for unidade in unidades:
-
-                for curso in unidade.getCursos():
-
-                    if (nomecurso == curso.getNome()):
-                        cursoencontrado.append(curso)
-
-            if len(cursoencontrado) == 0:
-
-                print(f"Curso {nomecurso} não encontrado")
+                nomecurso = input("Digite o nome do curso: ")
                 print()
 
-            else:
-                cursoencontrado[0].imprimirDadosCurso()
+                for unidade in unidades:
 
-        elif opcao == 3: # Funcionalidade 3
+                    for curso in unidade.getCursos():
 
-            for unidade in unidades:
+                        if (padronizarTexto(nomecurso) == padronizarTexto(curso.getNome())):
+                            cursoencontrado.append(curso)
+
+                if len(cursoencontrado) == 0:
+
+                    print(f"Curso {nomecurso} não encontrado")
+                    print()
+
+                else:
+                    
+                    print(f"{len(cursoencontrado)} curso(s) encontrado(s)")
+                    print()
+                    
+                    for curso in cursoencontrado:
+                        curso.imprimirDadosCurso()
+
+            elif opcao == 3: # Funcionalidade 3
+
+                for unidade in unidades:
+                    
+                    for curso in unidade.getCursos():
+                        curso.imprimirDadosCurso()
+
+            elif opcao == 4: # Funcionalidade 4
+
+                disciplinaencontrada = []
+                cursospresente = []
+
+                codigodisciplina = input("Digite o código da disciplina: ")
+                print()
+
+                for unidade in unidades:
+
+                    for curso in unidade.getCursos():
+
+                        for disciplina in chain(curso.getObrigatorias(), curso.getOptativasLivres(), curso.getOptativasEletivas()):
+                            
+                            if(padronizarTexto(disciplina.codigo) == padronizarTexto(codigodisciplina)):
+
+                                disciplinaencontrada.append(disciplina)
+                                cursospresente.append(curso)
+
+                                break
+
+                if len(cursospresente) == 0:
+
+                    print(f"Disciplina {codigodisciplina} não encontrada")
+                    print()
+
+                else:
+
+                    disciplinaencontrada[0].imprimirDadosDisciplina()
+
+                    print(f"Cursos em que {codigodisciplina} está presente: ")
+                    print()
+
+                    for curso in cursospresente:
+                        print(curso.getNome())
                 
-                for curso in unidade.getCursos():
-                    print(curso.imprimirDadosCurso())
+                    print()
 
-        elif opcao == 4: # Funcionalidade 4
 
-            disciplinaencontrada = []
-            cursospresente = []
+            elif opcao == 5: # Funcionalidade 5
 
-            codigodisciplina = input("Digite o código da disciplina: ")
+                disciplinas = []
 
-            for unidade in unidades:
+                for i, unidade in enumerate(unidades):
 
-                for curso in unidade.getCursos():
+                    print(f"{i + 1} - {unidade.getNome()}")
+                    print()
+
+                while True:
+
+                    try:
+
+                        j = int(input("Selecione o número da unidade desejada: "))
+                        print()
+
+                        if j > 0 and j < len(unidades):
+                            break
+                            
+                        else:
+
+                            print("Número inválido")
+                            print()
+
+                    except ValueError:
+                        print("Entrada inválida")
+                        print()
+
+                for curso in unidades[j - 1].getCursos():
 
                     for disciplina in chain(curso.getObrigatorias(), curso.getOptativasLivres(), curso.getOptativasEletivas()):
                         
-                        if(disciplina.codigo == codigodisciplina):
+                        if disciplina not in disciplinas:
+                            disciplinas.append(disciplina)
 
-                            disciplinaencontrada.append(disciplina)
-                            cursospresente.append(curso)
+                for disciplina in disciplinas:
+                    disciplina.imprimirDadosDisciplina()
 
-                            break
+            elif opcao == 6: # Funcionalidade 6
 
-            if len(cursospresente) == 0:
+                randomuni = randint(0, len(unidades) - 1)
+                
+                cursos = unidades[randomuni].getCursos()
 
-                print(f"Disciplina {codigodisciplina} não encontrada")
-                print()
+                randomcurso = randint(0, len(cursos) - 1)
+
+                cursos[randomcurso].imprimirDadosCurso()
+
+            elif opcao == 7: # Fechar Programa
+                break
 
             else:
-
-                disciplinaencontrada[0].imprimirDadosDisciplina()
-
-                print(f"Cursos em que {codigodisciplina} está presente: ")
+                print("Opção Inválida")
                 print()
-
-                for curso in cursospresente:
-                    print(curso.getNome())
-            
-                print()
-
-
-        elif opcao == 5: # Funcionalidade 5
-
-            disciplinas = []
-
-            for i, unidade in enumerate(unidades):
-
-                print(f"{i + 1} - {unidade.getNome()}")
-                print()
-
-            while True:
-
-                j = int(input("Selecione o número da unidade desejada: "))
-
-                if j > 0 and j < uninum:
-                    break
-                    
-                else:
-
-                    print("Número inválido")
-                    print()
-
-            for curso in unidades[j - 1].getCursos():
-
-                for disciplina in chain(curso.getObrigatorias(), curso.getOptativasLivres(), curso.getOptativasEletivas()):
-                    
-                    if disciplina not in disciplinas:
-                        disciplinas.append(disciplina)
-
-            for disciplina in disciplinas:
-                disciplina.imprimirDadosDisciplina()
-
-        elif opcao == 6: # Funcionalidade 6
-
-            randomuni = randint(0, uninum - 1)
-            
-            cursos = unidades[randomuni].getCursos()
-
-            randomcurso = randint(0, len(cursos) - 1)
-
-            cursos[randomcurso].imprimirDadosCurso()
-
-        elif opcao == 7: # Fechar Programa
-            break
-
-        else:
-            print("Opção Inválida")
+    
+        except ValueError:
+            print("Entrada inválida")
             print()
 
 
 while True:
+
     try:
-        uninum = int(input("Digite o número de unidades que serão lidas: "))
-        break
+        uninum = int(input("Digite o número de unidades que serão lidas (Máximo = 47): "))
+        print()
+
+        if 0 < uninum <= 47:
+            break
+
+        else:
+            print("Entrada inválida")
+            print()
 
     except ValueError:
         print("Entrada inválida")
+        print()
 
 unidades = []
 
@@ -212,7 +259,24 @@ for i in range (uninum):
 
         # Caso apareça o aviso de dados não encontrados
 
+        sleep(1)
 
+        htmlerro = nav.page_source
+        souperro = BeautifulSoup(htmlerro, 'html.parser')
+
+        erro = souperro.find('div', class_="ui-dialog-buttonset")
+
+        if erro:
+            
+            curso = Curso(nomecurso, nomeunidade, " -- ", " -- ", " -- ")
+            
+            unidades[i].adicionarCurso(curso)
+
+            botao = wait.until(expected_conditions.element_to_be_clickable((By.CSS_SELECTOR, "div.ui-dialog-buttonset button")))
+
+            botao.click()
+
+            continue
 
         # Avança para a grade curricular do curso
 
@@ -221,7 +285,14 @@ for i in range (uninum):
 
         # Coleta e armazena dados do curso
 
-        wait.until(expected_conditions.presence_of_element_located((By.CSS_SELECTOR, "div#gradeCurricular table")))
+        sleep(1)
+
+        try:
+
+            wait.until(expected_conditions.presence_of_element_located((By.CSS_SELECTOR, "div#gradeCurricular table")))
+
+        except TimeoutException:
+            pass
 
         html = nav.page_source
 
@@ -293,4 +364,4 @@ for i in range (uninum):
 
 nav.quit()
 
-Menu(unidades, uninum)
+Menu(unidades)
