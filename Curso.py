@@ -78,3 +78,54 @@ class Curso:
 
     def removerOptativaEletiva(self, valor):
         self.opteletivas.remove(valor)
+
+    def imprimirDadosCurso(self):
+
+        print("Dados do curso:")
+        print()
+
+        print(f"Nome: {self.nome}")
+        print(f"Unidade: {self.unidade}")
+        print(f"Duração ideal: {self.duracaoideal} semestres")
+        print(f"Duração máxima: {self.duracaomax} semestres")
+        print(f"Duração mínima: {self.duracaomin} semestres")
+        print()
+
+        print("Disciplinas Obrigatórias: ")
+        print()
+
+        if len(self.obrigatorias) > 0:
+        
+            for i, obrigatoria in enumerate(self.obrigatorias):
+                print(f"{i+1} - {obrigatoria.getNome()}")
+
+        else:
+            print("-- Curso sem disciplinas obrigatórias --")
+
+        print()
+    
+        print("Disciplinas Optativas Livres: ")
+        print()
+
+        if len(self.optlivres) > 0:
+        
+            for i, optativalivre in enumerate(self.optlivres):
+                print(f"{i+1} - {optativalivre.getNome()}")
+            
+        else:
+            print("-- Curso sem disciplinas optativas livres --")
+
+        print()
+
+        print("Disciplinas Obrigatórias: ")
+        print()
+        
+        if len(self.opteletivas):
+
+            for i, optativaeletiva in enumerate(self.opteletivas):
+                print(f"{i+1} - {optativaeletiva.getNome()}")
+
+        else:
+            print("-- Curso sem disciplinas optativas eletivas --")
+            
+        print()

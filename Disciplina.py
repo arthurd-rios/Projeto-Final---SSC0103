@@ -57,4 +57,17 @@ class Disciplina:
         return self.ativtpa
     
     def setAtividadesTPA(self, valor):
-        self.ativtpa = valor   
+        self.ativtpa = valor
+
+    def imprimirDadosDisciplina(self):
+
+        print(f"Código: {self.codigo}")
+        print(f"Nome: {self.nome}")
+        print(f"Créditos aula: {self.crediaula}")
+        print(f"Créditos trabalho: {self.creditrab}")
+        print(f"Carga horária: {self.ch}")
+        print(f"Carga horária de estágio: {self.che}")
+        print(f"Carga horária de Práticas como Componentes Curriculares: {self.chp}")
+        print(f"Atividades Teórico-Práticas de Aprofundamento: {self.ativtpa}")
+        print()
+

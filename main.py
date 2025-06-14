@@ -8,12 +8,151 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.support import expected_conditions
 from bs4 import BeautifulSoup
+from itertools import chain
+from random import randint
 
-import time
+def Menu(unidades, uninum):
+
+    while True:
+
+        print("Selecione uma opção:")
+        print()
+
+        print("1 - Cursos por unidade")
+        print("2 - Dados de um determinado curso")
+        print("3 - Dados de todos os cursos")
+        print("4 - Dados de uma determinada disciplina")
+        print("5 - Disciplinas de uma unidade")
+        print("6 - Dados de um curso aleatório")
+        print("7 - Fechar programa")
+        print()
+
+        opcao = int(input())
+
+        if opcao == 1: # Funcionalidade 1
+
+            for unidade in unidades:
+
+                unidade.imprimirCursos()
+
+        elif opcao == 2: # Funcionalidade 2
+
+            cursoencontrado = []
+
+            nomecurso = input("Digite o nome do curso: ")
+
+            for unidade in unidades:
+
+                for curso in unidade.getCursos():
+
+                    if (nomecurso == curso.getNome()):
+                        cursoencontrado.append(curso)
+
+            if len(cursoencontrado) == 0:
+
+                print(f"Curso {nomecurso} não encontrado")
+                print()
+
+            else:
+                cursoencontrado[0].imprimirDadosCurso()
+
+        elif opcao == 3: # Funcionalidade 3
+
+            for unidade in unidades:
+                
+                for curso in unidade.getCursos():
+                    print(curso.imprimirDadosCurso())
+
+        elif opcao == 4: # Funcionalidade 4
+
+            disciplinaencontrada = []
+            cursospresente = []
+
+            codigodisciplina = input("Digite o código da disciplina: ")
+
+            for unidade in unidades:
+
+                for curso in unidade.getCursos():
+
+                    for disciplina in chain(curso.getObrigatorias(), curso.getOptativasLivres(), curso.getOptativasEletivas()):
+                        
+                        if(disciplina.codigo == codigodisciplina):
+
+                            disciplinaencontrada.append(disciplina)
+                            cursospresente.append(curso)
+
+                            break
+
+            if len(cursospresente) == 0:
+
+                print(f"Disciplina {codigodisciplina} não encontrada")
+                print()
+
+            else:
+
+                disciplinaencontrada[0].imprimirDadosDisciplina()
+
+                print(f"Cursos em que {codigodisciplina} está presente: ")
+                print()
+
+                for curso in cursospresente:
+                    print(curso.getNome())
+            
+                print()
+
+
+        elif opcao == 5: # Funcionalidade 5
+
+            disciplinas = []
+
+            for i, unidade in enumerate(unidades):
+
+                print(f"{i + 1} - {unidade.getNome()}")
+                print()
+
+            while True:
+
+                j = int(input("Selecione o número da unidade desejada: "))
+
+                if j > 0 and j < uninum:
+                    break
+                    
+                else:
+
+                    print("Número inválido")
+                    print()
+
+            for curso in unidades[j - 1].getCursos():
+
+                for disciplina in chain(curso.getObrigatorias(), curso.getOptativasLivres(), curso.getOptativasEletivas()):
+                    
+                    if disciplina not in disciplinas:
+                        disciplinas.append(disciplina)
+
+            for disciplina in disciplinas:
+                disciplina.imprimirDadosDisciplina()
+
+        elif opcao == 6: # Funcionalidade 6
+
+            randomuni = randint(0, uninum - 1)
+            
+            cursos = unidades[randomuni].getCursos()
+
+            randomcurso = randint(0, len(cursos) - 1)
+
+            cursos[randomcurso].imprimirDadosCurso()
+
+        elif opcao == 7: # Fechar Programa
+            break
+
+        else:
+            print("Opção Inválida")
+            print()
+
 
 while True:
     try:
-        uninum = int(input())
+        uninum = int(input("Digite o número de unidades que serão lidas: "))
         break
 
     except ValueError:
@@ -29,6 +168,8 @@ nav.get("https://uspdigital.usp.br/jupiterweb/jupCarreira.jsp?codmnu=8275")
 for i in range (uninum):
 
     # Seleciona a unidade
+
+    wait.until(lambda driver: len(Select(driver.find_element(By.ID, "comboUnidade")).options) > 1)
 
     select = wait.until(expected_conditions.element_to_be_clickable((By.ID, "comboUnidade")))
     select.send_keys(Keys.RETURN)
@@ -151,3 +292,5 @@ for i in range (uninum):
         select.click()
 
 nav.quit()
+
+Menu(unidades, uninum)

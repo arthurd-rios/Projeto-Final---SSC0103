@@ -23,3 +23,14 @@ class Unidade:
 
     def removerCurso(self, valor):
         self.cursos.remove(valor)
+
+    def imprimirCursos(self):
+
+        print(f"Lista de cursos da unidade {self.nome}:")
+        print()
+
+        for i, curso in enumerate(self.cursos):
+
+            print(f"{i+1} - {curso.getNome()}")
+
+        print()
