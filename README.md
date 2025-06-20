@@ -2,9 +2,9 @@ Manual do usuário para a utilização do programa:
 
 1. Instale as bibliotecas necessárias para a utilização (Selenium, BeautifulSoup, itertools, random, time, unicodedata), digitando os seguintes comandos no terminal:
 
-pip install selenium
-pip install beautifulsoup4
-pip install webdriver-manager (para instalar o driver)
+- pip install selenium
+- pip install beautifulsoup4
+- pip install webdriver-manager (para instalar o driver)
 
 O restante das bibliotecas (itertools, random, time, unicodedata) já existem no python, então não precisam ser instalados.
 
